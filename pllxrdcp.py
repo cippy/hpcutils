@@ -11,6 +11,7 @@ parser.add_argument("-e", "--empty", action='store_true')
 parser.add_argument("-s", "--server", type=str, default = "eoscms.cern.ch") # can try cms-xrd-global.cern.ch
 parser.add_argument("--maxFiles", type=int, default=None)
 parser.add_argument("--dryRun", action='store_true', help="Print command but don't copy")
+parser.add_argument("--printFileList", action='store_true', help="Just print file list and exit")
 parser.add_argument("source", type=str, help="Source path. Can specify an existing file containing a list of input files using 'file=list.ext'")
 parser.add_argument("dest", type=str)
 
@@ -43,6 +44,10 @@ else:
     res = subprocess.run(cmds, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     res.check_returncode()
     lsfiles = str(res.stdout, 'utf-8').splitlines()
+    if args.printFileList:
+        for f in lsfiles:
+            print(f)
+        exit(0)
 
     lsfilenames = []
     for f in lsfiles:
